@@ -35,7 +35,26 @@ proto.route = function(path) {
 proto.handle = function(req, res, out) {
   const self = this;
   const stack = self.stack;
-  const layer = stack[0];
-  const route = layer.route;
+  const path = req.url;
+
+  var layer, match, route;
+  var index = 0;
+
+  while (match !== true && index < stack.length) {
+    layer = stack[index++];
+    match = matchLayer(layer, path);
+    route = layer.route;
+
+    if (match !== true || !route) continue;
+  }
+
   route.stack[0].handle_request(req, res);
+}
+
+function matchLayer(layer, path) {
+  try {
+    return layer.match(path);
+  } catch (err) {
+    return err;
+  }
 }

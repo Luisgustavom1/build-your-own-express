@@ -8,5 +8,16 @@ app.get('/', (req, res) => {
     res.end();
 });
 
+app.get('/2', (req, res) => {
+    res.writeHead(200)
+    res.write('Hello world from /2');
+    res.end();
+});
 
-app.listen(3000, () => console.log('Example app listening on port 3000!'))
+app.post('/post',(req,res) => {
+    res.writeHead(200)
+    res.write('Data from post :)');
+    res.end();
+})
+
+app.listen(3000, () => console.log('App listening on port 3000!'))
