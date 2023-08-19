@@ -1,6 +1,7 @@
+const http = require("node:http");
 const methods = require("./methods");
 const Router = require("./router");
-const http = require("node:http");
+const middleware = require("./middleware/init");
 
 const slice = Array.prototype.slice;
 
@@ -17,7 +18,9 @@ app.init = function() {
 app.lazyRouter = function() {
   if (!this._router) {
     this._router = new Router({})
-  }
+  } 
+
+  this._router.use(middleware.init(this))
 }
 
 app.listen = function listen() {

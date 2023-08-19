@@ -11,7 +11,8 @@ app.get("/", logger)
 
 app.get('/', (req, res) => {
     res.writeHead(200)
-    res.write('Hello world!\n');
+    res.write('Hello world from write\n');
+    res.send('Hello world');
     res.end();
 });
 

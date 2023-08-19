@@ -36,24 +36,36 @@ proto.handle = function(req, res, out) {
   const self = this;
   const stack = self.stack;
   let index = 0;
-
+  
   next();
 
   function next() {
     const path = req.url;
 
     var layer, match, route;
-
     while (match !== true && index < stack.length) {
       layer = stack[index++];
       match = matchLayer(layer, path);
       route = layer.route;
 
       if (match !== true || !route) continue;
+
+      route.stack[0].handle_request(req, res, next);
     }
 
-    route.stack[0].handle_request(req, res, next);
+    if (match) {
+      layer.handle_request(req, res, next);
+    }
   }
+}
+
+proto.use = function(fn) {
+  const layer = new Layer("/", {}, fn);
+
+  layer.route = undefined;
+  this.stack.push(layer);
+
+  return this;
 }
 
 function matchLayer(layer, path) {

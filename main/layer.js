@@ -22,5 +22,12 @@ Layer.prototype.handle_request = function(req, res, next) {
 }
 
 Layer.prototype.match = function(path) {
-  return this.route.path === path;
+  if (
+    this.route && this.route.path === path ||
+    this.name === "expressInit"
+  ) {
+    return true;
+  }
+
+  return false;
 }
