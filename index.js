@@ -2,6 +2,13 @@ const express = require('./main/express')
 
 const app = express()
 
+const logger = (req, res, next) => {
+    console.log(req.headers['user-agent']);
+    next();
+}
+
+app.get("/", logger)
+
 app.get('/', (req, res) => {
     res.writeHead(200)
     res.write('Hello world!\n');
