@@ -10,10 +10,7 @@ const logger = (req, res, next) => {
 app.get("/", logger)
 
 app.get('/', (req, res) => {
-    res.writeHead(200)
-    res.write('Hello world from write\n');
-    res.send('Hello world');
-    res.end();
+    res.send({ message: "success" });
 });
 
 app.get('/2', (req, res) => {

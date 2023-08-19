@@ -1,11 +1,11 @@
-const mixin = require('merge-descriptors');
+const mixin = require("merge-descriptors");
 const http = require("node:http");
 const proto = require("./app");
 
-exports = module.exports = createApplication
+exports = module.exports = createApplication;
 
 function createApplication() {
-  const app = function(req, res, next) {
+  const app = function (req, res, next) {
     app.handle(req, res, next);
   };
 
@@ -13,9 +13,21 @@ function createApplication() {
 
   const res = Object.create(http.ServerResponse.prototype);
 
-  res.send = function(body) {
-    console.log("from send", body);
-  }
+  res.send = function (body) {
+    if (typeof body === "object") {
+      this.json(body);
+    } else if (typeof body === "string") {
+      this.setHeader("Content-Type", "text/plain");
+      this.end(body, "utf8");
+    }
+
+    return this;
+  };
+
+  res.json = function (body) {
+    this.setHeader("Content-Type", "application/json");
+    return this.send(JSON.stringify(body));
+  };
 
   app.response = Object.create(res, {
     app: {
@@ -23,8 +35,8 @@ function createApplication() {
       enumerable: true,
       writable: true,
       value: app,
-    }
-  })
+    },
+  });
 
   app.init();
   return app;
